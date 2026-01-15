@@ -29,6 +29,7 @@
 
 ## Data Models (ตัวอย่างโครงสร้าง)
 ###Request Body
+```json
 {
   "room_id": 101,
   "booking_date": "2026-01-15",
@@ -39,7 +40,7 @@
 }
 
 ### Response (201 Created)
-
+```json
 {
   "room_id": 1,
   "room_name": "Room A",
