@@ -1,48 +1,42 @@
-# RESTful API Design: ระบบจองห้องประชุม (Meeting Room Booking)
-> Base URL: `/api/v1`  
-> Content-Type: `application/json`  
-> Auth: `Authorization: Bearer <token>`  
-> Roles: `user`, `staff`  
-> Timezone: `Asia/Bangkok` (แนะนำส่ง/รับเป็น ISO 8601)
+# RESTful API Design – Meeting Room Booking System
+
+> Base URL: `/api`  
+> Auth: ใช้ `Authorization: Bearer <token>` สำหรับ endpoint ที่ต้องล็อกอิน  
+> Roles: `user` (ผู้ใช้ทั่วไป), `staff` (เจ้าหน้าที่)
 
 ---
 
-## 1) Overview
-**Resources หลัก**
-- `rooms` (ห้องประชุม)
-- `bookings` (การจอง)
-- `auth/users` (สมัคร/ล็อกอิน/โปรไฟล์)
+## API Endpoints (Summary Table)
 
-**Booking status (แนะนำ)**
-- `pending` → `approved`
-- `pending` → `cancelled`
-- `approved` → `cancelled`
+| HTTP Method | Endpoint | Description | Request Body | Response (Success) | Status Code |
+|---|---|---|---|---|---|
+| GET | /api/rooms | ดึงรายการห้องทั้งหมด (รองรับ filtering) | - | `[{room}, ...]` | 200 |
+| GET | /api/rooms/:id | ดึงข้อมูลห้องเดียว | - | `{room}` | 200 |
+| POST | /api/rooms | สร้างห้องใหม่ (เจ้าหน้าที่) | `{...}` | `{room}` | 201 |
+| PUT | /api/rooms/:id | แก้ไขข้อมูลห้อง (เจ้าหน้าที่) | `{...}` | `{room}` | 200 |
+| DELETE | /api/rooms/:id | ลบห้อง (เจ้าหน้าที่) | - | `{message}` | 200 |
+| GET | /api/bookings | ดึงรายการจองทั้งหมด (เจ้าหน้าที่) | - | `[{booking}, ...]` | 200 |
+| GET | /api/bookings/my | ดึงการจองของตัวเอง | - | `[{booking}, ...]` | 200 |
+| POST | /api/bookings | สร้างการจองใหม่ | `{...}` | `{booking}` | 201 |
+| DELETE | /api/bookings/:id | ยกเลิกการจอง (เจ้าของ/เจ้าหน้าที่) | - | `{message}` | 200 |
+| PATCH | /api/bookings/:id/approve | อนุมัติการจอง (เจ้าหน้าที่) | `{status}` | `{booking}` | 200 |
+| POST | /api/auth/login | Login | `{email,password}` | `{token,user}` | 200 |
+| POST | /api/auth/register | Register | `{name,email,password}` | `{token,user}` | 201 |
+| GET | /api/users/profile | ดูข้อมูลตัวเอง | - | `{user}` | 200 |
 
 ---
 
-## 2) Standards & Conventions
+## Data Models (ตัวอย่างโครงสร้าง)
 
-### 2.1 Naming
-- ใช้ **noun** และพหูพจน์: `/rooms`, `/bookings`
-- ใช้ `{id}` ใน path: `/rooms/{roomId}`
-
-### 2.2 Query สำหรับ List
-- Pagination: `page=1`, `limit=20`
-- Sorting: `sort=name`, `sort=-createdAt`
-- Filtering: `search`, `status`, `capacityMin`, `features`
-
-### 2.3 Status Codes
-- `200 OK`, `201 Created`, `204 No Content`
-- `400 Bad Request`, `401 Unauthorized`, `403 Forbidden`, `404 Not Found`
-- `409 Conflict` (เวลา booking ชน), `422 Unprocessable Entity` (validation)
-
-### 2.4 Error Format (Standard)
+### room
 ```json
 {
-  "error": {
-    "code": "BOOKING_CONFLICT",
-    "message": "Room is not available in the selected time range",
-    "details": []
-  },
-  "requestId": "req_abc123"
+  "id": 1,
+  "name": "Room A",
+  "capacity": 20,
+  "location": "Building 1, Floor 3",
+  "equipment": ["Projector", "Whiteboard"],
+  "status": "available",
+  "createdAt": "2026-01-15T04:00:00.000Z",
+  "updatedAt": "2026-01-15T04:00:00.000Z"
 }
