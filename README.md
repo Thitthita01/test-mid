@@ -1,4 +1,4 @@
-# RESTful API Design – Meeting Room Booking System
+# RESTful API Design
 
 > Base URL: `/api`  
 > Auth: ใช้ `Authorization: Bearer <token>` สำหรับ endpoint ที่ต้องล็อกอิน  
@@ -31,8 +31,8 @@
 ### room
 ```json
 {
-  "id": 1,
-  "name": "Room A",
+  "room_id": 1,
+  "room_name": "Room A",
   "capacity": 20,
   "location": "Building 1, Floor 3",
   "equipment": ["Projector", "Whiteboard"],
