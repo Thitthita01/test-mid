@@ -26,10 +26,20 @@
 
 ---
 
-## Data Models (ตัวอย่างโครงสร้าง)
 
-### room
-```json
+## Data Models (ตัวอย่างโครงสร้าง)
+###Request Body
+{
+  "room_id": 101,
+  "booking_date": "2026-01-15",
+  "start_time": "09:00",
+  "end_time": "12:00",
+  "purpose": "ประชุมโครงการ",
+  "attendees": 8
+}
+
+### Response (201 Created)
+
 {
   "room_id": 1,
   "room_name": "Room A",
